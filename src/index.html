@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实现一个vue</title>
+</head>
+
+<body>
+    <div id="app">
+        <h2>{{person.name}}--{{person.age}}</h2>
+        <h3>{{person.fav}}</h3>
+        <div>
+            <div>
+                <div>1</div>
+            </div>
+        </div>
+        <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+        </ul>
+        <h3>{{msg}}</h3>
+        <div v-text="msg"></div>
+        <div v-text="person.name"></div>
+        <div v-html="htmlStr"></div>
+        <input type="text" v-model="msg" />
+        <a v-bind:href="url">跳转bind</a>
+        <button v-on:click="testClick">dianji</button>
+        <button @click="testClick"> @ dianji</button>
+
+    </div>
+</body>
+<script src="./m_vue.js"></script>
+<script>
+    let vm = new MVue({
+        el: '#app',
+        data: {
+            person: {
+                name: 'cxw',
+                age: '18',
+                fav: 'money'
+            },
+            msg: '中七星彩啊',
+            htmlStr: '<div>这是htmlStr</div>',
+            url: 'https://www.baidu.com'
+        },
+        methods: {
+            testClick(data) {
+                console.log(data)
+            }
+        }
+    })
+</script>
+
+</html>
