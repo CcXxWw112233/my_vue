@@ -4,6 +4,11 @@ const compileUtil = {
             return data[curentVal]
         }, vm.$data)
     },
+    setValue(expr, vm, inputValue) {
+        return expr.split('.').reduce((data, curentVal) => {
+            data[curentVal] = inputValue
+        }, vm.$data)
+    },
     getContentVal(expr, vm) {
         return expr.replace(/\{\{(.+?)\}\}/g, (...args) => {
             //这是一个正则match {{person.name}} => person.name 这是args[1]
@@ -37,6 +42,11 @@ const compileUtil = {
         const value = this.getValue(expr, vm)
         new Watcher(vm, expr, (newVal) => {
             this.updater.modelUpdater(node, newVal)
+        })
+        // 视图驱动数据
+        node.addEventListener('input', (e) => {
+            //设置值
+            this.setValue(expr, vm, e.target.value)
         })
         this.updater.modelUpdater(node, value)
     },
@@ -151,6 +161,20 @@ class MVue {
             new Observer(this.$data)
             //实现一个解析器
             new Compile(this.$el, this)
+            // 代理，将data代理到this
+            this.proxyData(this.$data) //可以直接this.person.name代替this.$data.person.name
+        }
+    }
+    proxyData(data) {
+        for (const key in data) {
+            Object.defineProperty(this, key, {
+                get() {
+                    return data[key]
+                },
+                set(newVal) {
+                    data[key] = newVal
+                }
+            })
         }
     }
 }
