@@ -9,6 +9,16 @@
 
 <body>
     <div id="app">
+        <h1>vue响应式原理:</h1>
+        <p>
+            vue是采用数据劫持配合发布者-订阅者的方式，通过
+            object.dedfinProperty()来劫持各个属性的getter和setter
+            ,在数据变动是发布消息给依赖收集器，去通知观察者，做出相应的回调函数，去更新视图。
+            <br />
+            mvvm作为入口，整合Observer，compile,watcher三者，通过observer来监听
+            model数据的变化通过compile来解析编译模板指令，最终利用watcher搭起observer compile之间的通信桥梁
+            达到数据双向绑定
+        </p>
         <h2>{{person.name}}--{{person.age}}</h2>
         <h3>{{person.fav}}</h3>
         <div>
