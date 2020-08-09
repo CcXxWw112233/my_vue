@@ -5,7 +5,7 @@ const compileUtil = {
         }, vm.$data)
     },
     getContentVal(expr, vm) {
-        return expr.replace(/\{\{(.+?)\}\}/, (...args) => {
+        return expr.replace(/\{\{(.+?)\}\}/g, (...args) => {
             //这是一个正则match {{person.name}} => person.name 这是args[1]
             return this.getValue(args[1], vm)
         })
