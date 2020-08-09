@@ -4,10 +4,20 @@ const compileUtil = {
             return data[curentVal]
         }, vm.$data)
     },
+    getContentVal(expr, vm) {
+        return expr.replace(/\{\{(.+?)\}\}/, (...args) => {
+            //这是一个正则match {{person.name}} => person.name 这是args[1]
+            return this.getValue(args[1], vm)
+        })
+    },
     text(node, expr, vm) {
         let value;
         if (/\{\{(.+?)\}\}/.test(expr)) { //字符转模板编译
             value = expr.replace(/\{\{(.+?)\}\}/g, (...args) => {
+                // 绑定watcher
+                new Watcher(vm, args[1], (newVal) => {
+                    this.updater.textUpdater(node, this.getContentVal(expr, vm))
+                })
                 //这是一个正则match {{person.name}} => person.name 这是args[1]
                 return this.getValue(args[1], vm)
             })
@@ -18,10 +28,16 @@ const compileUtil = {
     },
     html(node, expr, vm) {
         const value = this.getValue(expr, vm)
+        new Watcher(vm, expr, (newVal) => {
+            this.updater.htmlUpdater(node, newVal)
+        })
         this.updater.htmlUpdater(node, value)
     },
     model(node, expr, vm) {
         const value = this.getValue(expr, vm)
+        new Watcher(vm, expr, (newVal) => {
+            this.updater.modelUpdater(node, newVal)
+        })
         this.updater.modelUpdater(node, value)
     },
     on(node, expr, vm, eventName) {
@@ -131,10 +147,10 @@ class MVue {
         this.$data = data
         this.$options = options
         if (this.$el) {
+            //实现一个观察者
+            new Observer(this.$data)
             //实现一个解析器
             new Compile(this.$el, this)
-
-            //实现一个观察者
         }
     }
 }

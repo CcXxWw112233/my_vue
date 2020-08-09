@@ -23,7 +23,6 @@
         </ul>
         <h3>{{msg}}</h3>
         <div v-text="msg"></div>
-        <div v-text="person.name"></div>
         <div v-html="htmlStr"></div>
         <input type="text" v-model="msg" />
         <a v-bind:href="url">跳转bind</a>
@@ -32,6 +31,7 @@
 
     </div>
 </body>
+<script src="./observer.js"></script>
 <script src="./m_vue.js"></script>
 <script>
     let vm = new MVue({
@@ -48,7 +48,8 @@
         },
         methods: {
             testClick(data) {
-                console.log(data)
+                this.$data.person.name = '哈哈哈'
+                console.log(this.$data)
             }
         }
     })
